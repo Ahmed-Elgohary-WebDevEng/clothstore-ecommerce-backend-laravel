@@ -16,7 +16,7 @@ class GallarySeeder extends Seeder
         $products = Product::all();
 
         $products->each(function ($product) {
-            Gallary::factory(random_int(1, 6))->create(['product_id' => $product->id]);
+            Gallary::factory(5)->create(['product_id' => $product->id]);
         });
     }
 }

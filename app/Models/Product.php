@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,6 +26,17 @@ class Product extends Model
         'published',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('images', function (Builder $builder) {
+            $builder->with('images');
+        });
+    }
+
+    /**
+     * Product Relations
+     */
+
     public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class, 'product_id');
@@ -35,7 +47,7 @@ class Product extends Model
         return $this->belongsTo(SubCategory::class);
     }
 
-    public function gallaries(): HasMany
+    public function images(): HasMany
     {
         return $this->hasMany(Gallary::class, 'product_id');
     }
