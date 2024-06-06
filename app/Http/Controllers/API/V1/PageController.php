@@ -7,9 +7,12 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
+use App\Traits\HttpResponses;
 
 class PageController extends Controller
 {
+    use HttpResponses;
+    
     public function homePage()
     {
         $featured_products = Product::orderBy('regular_price', 'desc')->limit(6)->get();
