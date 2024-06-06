@@ -34,4 +34,9 @@ class Product extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
+
+    public function gallaries(): HasMany
+    {
+        return $this->hasMany(Gallary::class, 'product_id');
+    }
 }
