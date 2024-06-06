@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\SubCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -20,6 +21,7 @@ class ProductFactory extends Factory
         $name = $this->faker->name();
         $product_price = $this->faker->randomFloat(2, 10, 100);
         return [
+            'category_id' => SubCategory::factory(),
             'product_name' => $name,
             'product_slug' => Str::slug($name),
             'SKU' => strtoupper($this->faker->regexify('[A-Z]{3}-[0-9]{5}')),
