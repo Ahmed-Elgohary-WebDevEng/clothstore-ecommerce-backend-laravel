@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\CategoryListResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductShowResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Traits\HttpResponses;
@@ -12,7 +13,7 @@ use App\Traits\HttpResponses;
 class PageController extends Controller
 {
     use HttpResponses;
-    
+
     public function homePage()
     {
         $featured_products = Product::orderBy('regular_price', 'desc')->limit(6)->get();
@@ -25,13 +26,13 @@ class PageController extends Controller
         return response()->json([
             'featured_products' => ProductResource::collection($featured_products),
             'new_products' => ProductResource::collection($new_products),
-            'categories' => CategoryResource::collection($categories)
+            'categories' => CategoryListResource::collection($categories)
         ]);
     }
 
 
     public function productDetails(Product $product)
     {
-        return new ProductResource($product);
+        return new ProductShowResource($product);
     }
 }
