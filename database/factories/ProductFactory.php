@@ -23,7 +23,7 @@ class ProductFactory extends Factory
         return [
             'category_id' => SubCategory::factory(),
             'product_name' => $name,
-            'product_slug' => Str::slug($name),
+            'product_slug' => Str::slug($name).'-'.Str::random(5),
             'SKU' => strtoupper($this->faker->regexify('[A-Z]{3}-[0-9]{5}')),
             'regular_price' => $product_price,
             'discount_price' => $product_price * (1 - 0.05),

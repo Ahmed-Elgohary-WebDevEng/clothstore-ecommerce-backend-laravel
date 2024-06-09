@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\CategoryListResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
+use App\Models\Gallary;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -66,12 +68,9 @@ class PageControllerTest extends TestCase
                         'id',
                         'name',
                         'slug',
-                        'description',
-                        'icon',
                         'image_path',
-                        'active',
                     ]
-                ],
+                ]
             ]);
 
         // Get the products sorted by regular_price descending
@@ -83,7 +82,7 @@ class PageControllerTest extends TestCase
         // Convert to resources
         $featuredProductsResource = ProductResource::collection($featuredProducts)->response()->getData(true);
         $newProductsResource = ProductResource::collection($newProducts)->response()->getData(true);
-        $categoriesResource = CategoryResource::collection($categories)->response()->getData(true);
+        $categoriesResource = CategoryListResource::collection($categories)->response()->getData(true);
 
         $response->assertJson([
             'featured_products' => $featuredProductsResource['data'],
@@ -96,36 +95,41 @@ class PageControllerTest extends TestCase
     public function test_product_details_page_it_return_product_by_slug()
     {
         // Arrange: create a product
-        $product = Product::factory()->hasImages(4)->create();
+        $product = Product::factory()->create();
 
+        // Add images to the product
+        $images = Gallary::factory()->count(3)->create([
+            'product_id' => $product->id,
+        ]);
         // Act: call the show route
         $response = $this->getJson(route('page.product-details', $product->product_slug));
 
-        // Assert: check the status and structure of the response
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    'id',
-                    'product_name',
-                    'product_slug',
-                    'SKU',
-                    'regular_price',
-                    'discount_price',
-                    'quantity',
-                    'description',
-                    'product_weight',
-                    'product_note',
-                    'published',
-                    'images'
-                ]
-            ]);
+        // Assert the response status
+        $response->assertStatus(200);
 
-        // Convert the product to a resource
-        $productResource = (new ProductResource($product))->response()->getData(true);
-
-        // Assert the product data
-        $response->assertJson([
-            'data' => $productResource['data'],
+        // Assert the response structure
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'product_name',
+                'product_slug',
+                'SKU',
+                'regular_price',
+                'discount_price',
+                'quantity',
+                'description',
+                'product_weight',
+                'product_note',
+                'published',
+                'images' => [
+                    '*' => [
+                        'id',
+                        'image_path',
+                        'thumbnail',
+                        'display_order',
+                    ],
+                ],
+            ],
         ]);
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
@@ -50,5 +51,18 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Gallary::class, 'product_id');
+    }
+
+    // Many to Many
+    public function attributes(): BelongsToMany
+    {
+        return $this->belongsToMany(Attribute::class, 'product_attribute');
+    }
+
+
+    // One to Many
+    public function variants(): HasMany
+    {
+        return $this->hasMany(Variant::class, 'product_id');
     }
 }

@@ -35,4 +35,6 @@ class PageController extends Controller
     {
         return new ProductShowResource($product);
     }
+
+
 }

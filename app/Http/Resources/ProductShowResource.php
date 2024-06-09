@@ -26,7 +26,7 @@ class ProductShowResource extends JsonResource
             'product_weight' => $this->product_weight,
             'product_note' => $this->product_note,
             'published' => $this->published,
-            'images' => GallaryResource::collection($this->images)
+            'images' => GallaryResource::collection($this->images),
         ];
     }
 }

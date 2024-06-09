@@ -21,7 +21,7 @@ class CategoryFactory extends Factory
 
         return [
             'name' => $name,
-            'slug' => Str::slug($name),
+            'slug' => Str::slug($name).'-'.Str::random(3),
             'description' => $this->faker->text(),
             'icon' => $this->faker->imageUrl,
             'image_path' => $this->faker->imageUrl,

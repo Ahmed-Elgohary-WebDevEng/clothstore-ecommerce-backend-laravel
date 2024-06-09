@@ -22,7 +22,7 @@ class SubCategoryFactory extends Factory
         return [
             'parent_id' => Category::factory(),
             'name' => $name,
-            'slug' => Str::slug($name),
+            'slug' => Str::slug($name).'-'.Str::random(3),
             'description' => $this->faker->text()
         ];
     }
