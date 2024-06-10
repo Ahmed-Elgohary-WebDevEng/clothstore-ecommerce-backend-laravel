@@ -53,16 +53,15 @@ class Product extends Model
         return $this->hasMany(Gallary::class, 'product_id');
     }
 
-    // Many to Many
+    // Product Belong to Many Attributes
     public function attributes(): BelongsToMany
     {
-        return $this->belongsToMany(Attribute::class, 'product_attribute');
+        return $this->belongsToMany(Attribute::class, ProductAttribute::class);
     }
 
-
-    // One to Many
     public function variants(): HasMany
     {
         return $this->hasMany(Variant::class, 'product_id');
     }
+
 }

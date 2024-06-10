@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->integer('quantity');
             $table->text('description');
             $table->float('product_weight')->nullable();
-            $table->string('product_note')->nullable();
+            $table->text('product_note')->nullable();
             $table->boolean('published')->default(false);
 
             $table->timestamps();

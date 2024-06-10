@@ -30,7 +30,7 @@ class ProductFactory extends Factory
             'quantity' => $this->faker->numberBetween(1, 30),
             'description' => $this->faker->text(),
             'product_weight' => $this->faker->randomFloat(2, 10, 100),
-            'product_note' => $this->faker->text(),
+            'product_note' => $this->faker->paragraph(6),
             'published' => $this->faker->boolean(),
         ];
     }

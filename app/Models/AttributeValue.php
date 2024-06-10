@@ -7,24 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Variant extends Model
+class AttributeValue extends Model
 {
     use HasFactory;
 
     public $timestamps = null;
     protected $fillable = [
-        'product_id',
-        'price',
-        'quantity'
+        'attribute_value_id',
+        'attribute_value'
     ];
 
-    public function product(): BelongsTo
+    public function attribute(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Attribute::class);
     }
 
-    public function attributeValues(): BelongsToMany
+    public function variants(): BelongsToMany
     {
-        return $this->belongsToMany(AttributeValue::class, VariantAttributeValue::class);
+        return $this->belongsToMany(Variant::class, VariantAttributeValue::class);
     }
 }

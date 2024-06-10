@@ -22,7 +22,7 @@ class ProductSeeder extends Seeder
         $sub_categories = SubCategory::all();
 
         $sub_categories->each(function (SubCategory $sub_category) {
-            Product::factory(10)->create(['category_id' => $sub_category->id]);
+            Product::factory(4)->create(['category_id' => $sub_category->id]);
         });
     }
 }
