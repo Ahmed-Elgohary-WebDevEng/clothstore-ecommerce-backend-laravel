@@ -9,6 +9,22 @@ class VariantAttributeValueSeeder extends Seeder
 {
     public function run(): void
     {
-        VariantAttributeValue::factory(20)->create();
+        VariantAttributeValue::factory(40)->create();
+
+
+//        $variants = Variant::where('product_id', 1)->get();
+//        $variants->each(function (Variant $variant) {
+//            VariantAttributeValue::factory()->create([
+//                'variant_id' => $variant->id,
+//            ]);
+//        });
+//
+//
+//        AttributeValue::all()->each(function (AttributeValue $attributeValue) {
+//            VariantAttributeValue::factory()->create([
+//                'attribute_value_id' => $attributeValue->id,
+//            ]);
+//        });
+
     }
 }

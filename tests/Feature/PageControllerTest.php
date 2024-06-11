@@ -5,9 +5,11 @@ namespace Tests\Feature;
 use App\Http\Resources\CategoryListResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Category;
-use App\Models\Gallary;
 use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -94,22 +96,38 @@ class PageControllerTest extends TestCase
 
     public function test_product_details_page_it_return_product_by_slug()
     {
-        // Arrange: create a product
-        $product = Product::factory()->create();
+        // Create a product
+        $product = Product::factory()->hasImages(4)->create();
 
-        // Add images to the product
-        $images = Gallary::factory()->count(3)->create([
-            'product_id' => $product->id,
-        ]);
-        // Act: call the show route
-        $response = $this->getJson(route('page.product-details', $product->product_slug));
+        // Create related attributes and attribute values
+        $attributes = Attribute::factory()->count(4)->create();
+        $attributeValues = [];
+        foreach ($attributes as $attribute) {
+            $values = AttributeValue::factory()->count(3)->create(['attribute_id' => $attribute->id]);
+            $attributeValues = array_merge($attributeValues, $values->toArray());
+        }
+
+        // Attach attributes to the product
+        foreach ($attributes as $attribute) {
+            $product->attributes()->attach($attribute->id);
+        }
+
+        // Create variants for the product
+        $variants = Variant::factory()->count(7)->create(['product_id' => $product->id]);
+        foreach ($variants as $variant) {
+            $values = collect($attributeValues)->random(3);
+            $variant->attributeValues()->attach($values->pluck('id'));
+        }
+
+        // Make the request to the productDetails endpoint
+        $response = $this->json('GET', route('page.product-details', ['product' => $product->product_slug]));
 
         // Assert the response status
         $response->assertStatus(200);
 
-        // Assert the response structure
+        // Assert the structure of the response
         $response->assertJsonStructure([
-            'data' => [
+            'product' => [
                 'id',
                 'product_name',
                 'product_slug',
@@ -127,6 +145,35 @@ class PageControllerTest extends TestCase
                         'image_path',
                         'thumbnail',
                         'display_order',
+                    ],
+                ],
+                'attributes' => [
+                    '*' => [
+                        'id',
+                        'attribute_name',
+                        'values' => [
+                            '*' => [
+                                'id',
+                                'attribute_id',
+                                'attribute_value',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'product_variants' => [
+                '*' => [
+                    'id',
+                    'product_id',
+                    'price',
+                    'quantity',
+                    'attribute_values' => [
+                        '*' => [
+                            'id',
+                            'attribute_id',
+                            'attribute_value',
+                            'attribute_name',
+                        ],
                     ],
                 ],
             ],

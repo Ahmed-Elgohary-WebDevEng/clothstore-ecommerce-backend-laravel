@@ -14,8 +14,8 @@ class VariantFactory extends Factory
     {
         return [
             'product_id' => Product::factory(),
-            'price' => $this->faker->randomFloat(5, 0, 5),
-            'quantity' => $this->faker->randomNumber(),
+            'price' => $this->faker->randomFloat(2, 10, 100),
+            'quantity' => $this->faker->randomNumber(2),
         ];
     }
 }

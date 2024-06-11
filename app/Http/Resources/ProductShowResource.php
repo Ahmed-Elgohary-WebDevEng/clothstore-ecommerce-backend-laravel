@@ -27,6 +27,7 @@ class ProductShowResource extends JsonResource
             'product_note' => $this->product_note,
             'published' => $this->published,
             'images' => GallaryResource::collection($this->images),
+            'attributes' => AttributeResource::collection($this->whenLoaded('attributes')),
         ];
     }
 }

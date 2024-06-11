@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('variant_attribute_value', function (Blueprint $table) {
             $table->foreignId('attribute_value_id')->constrained('attribute_values')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('variant_id')->constrained('variants')->cascadeOnUpdate()->cascadeOnDelete();
+
+            $table->primary(['attribute_value_id', 'variant_id']);
         });
     }
 
