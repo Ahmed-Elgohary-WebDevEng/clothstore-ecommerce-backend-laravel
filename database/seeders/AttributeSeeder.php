@@ -9,6 +9,14 @@ class AttributeSeeder extends Seeder
 {
     public function run(): void
     {
-        Attribute::factory(4)->create();
+        $attributes = ['color', 'size', 'capacity', 'material'];
+
+        foreach ($attributes as $attribute) {
+
+            Attribute::factory()->create([
+                'attribute_name' => $attribute,
+            ]);
+        }
+
     }
 }

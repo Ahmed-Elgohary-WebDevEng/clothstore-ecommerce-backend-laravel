@@ -5,12 +5,14 @@ namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryListResource;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductResourceCollection;
 use App\Http\Resources\ProductShowResource;
 use App\Http\Resources\VariantProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Variant;
 use App\Traits\HttpResponses;
+use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
@@ -32,6 +34,22 @@ class PageController extends Controller
         ]);
     }
 
+    public function getFilteredProducts(Request $request)
+    {
+        try {
+            // Todo ==> Filtering products
+            $products = Product::paginate(6)->withQueryString();
+
+            return new ProductResourceCollection($products);
+        } catch (\Exception $exception) {
+            return $this->error($exception->getMessage(), 500, 'Something went wrong');
+        }
+    }
+
+    public function searchProducts(Request $request)
+    {
+
+    }
 
     public function productDetails(Product $product)
     {

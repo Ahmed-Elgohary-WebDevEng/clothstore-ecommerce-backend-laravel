@@ -29,4 +29,6 @@ class ProductResource extends JsonResource
             'images' => GallaryResource::collection($this->images)
         ];
     }
+
+    
 }

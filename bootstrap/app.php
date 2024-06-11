@@ -40,4 +40,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 404);
             }
         });
+
+        $exceptions->render(function (TypeError $e, Request $request) {
+            if ($request->wantsJson()) {
+
+                return response()->json([
+                    'message' => "Something went wrong."
+                ], 500);
+            }
+        });
     })->create();

@@ -93,6 +93,64 @@ class PageControllerTest extends TestCase
         ]);
     }
 
+    public function test_get_filtered_products_with_paginate()
+    {
+        // Arrange: Create some dummy products
+        $products = Product::factory(12)->hasImages(4)->create();
+
+        // Act: Make a GET request to the endpoint
+        $response = $this->json('GET', route('page.get-filtered-products'));
+
+        // Assert: Check the response
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'product_name',
+                        'product_slug',
+                        'SKU',
+                        'regular_price',
+                        'discount_price',
+                        'quantity',
+                        'description',
+                        'product_weight',
+                        'product_note',
+                        'published',
+                        'images' => [
+                            '*' => [
+                                'id',
+                                'image_path',
+                                'thumbnail',
+                                'display_order'
+                            ]
+                        ]
+                    ]
+                ],
+                'links' => [
+                    'first',
+                    'last',
+                    'prev',
+                    'next'
+                ],
+                'meta' => [
+                    'current_page',
+                    'from',
+                    'last_page',
+                    'links' => [
+                        '*' => [
+                            'url',
+                            'label',
+                            'active'
+                        ]
+                    ],
+                    'path',
+                    'per_page',
+                    'to',
+                    'total'
+                ]
+            ]);
+    }
 
     public function test_product_details_page_it_return_product_by_slug()
     {
@@ -125,7 +183,7 @@ class PageControllerTest extends TestCase
         // Assert the response status
         $response->assertStatus(200);
 
-        
+
         // Assert the structure of the response
         $response->assertJsonStructure([
             'product' => [

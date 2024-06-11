@@ -14,7 +14,7 @@ class AttributeValueSeeder extends Seeder
 
             $name = $attribute->attribute_name;
 
-            $colors = ['#ffff66', '#1245ff', '#we3423', '#12qw34'];
+            $colors = ['#45ff66', '#1245ff', '#we3423', '#12qw34'];
             $sizes = ['small', 'medium', 'large'];
             $capacities = ['500ml', '1500ml', '1.5L'];
             $materials = ['cotton', 'plastic', 'metal'];

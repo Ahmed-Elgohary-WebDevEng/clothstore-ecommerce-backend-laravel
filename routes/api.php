@@ -10,6 +10,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 // pages routes
 Route::get('/', [PageController::class, 'homePage'])->name("page.home-page");
+Route::get('/products', [PageController::class, 'getFilteredProducts'])->name("page.get-filtered-products");
 Route::get('/products/{product:product_slug}', [PageController::class, 'productDetails'])->name('page.product-details');
 
 
