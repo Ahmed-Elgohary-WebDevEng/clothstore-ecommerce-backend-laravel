@@ -125,6 +125,7 @@ class PageControllerTest extends TestCase
         // Assert the response status
         $response->assertStatus(200);
 
+        
         // Assert the structure of the response
         $response->assertJsonStructure([
             'product' => [
