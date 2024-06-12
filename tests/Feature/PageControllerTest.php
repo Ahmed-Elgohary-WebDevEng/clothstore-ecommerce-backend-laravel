@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Http\Resources\CategoryListResource;
-use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
 use App\Models\Variant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -97,13 +97,32 @@ class PageControllerTest extends TestCase
     {
         // Arrange: Create some dummy products
         $products = Product::factory(12)->hasImages(4)->create();
+        $categories = Category::factory(5)->create();
+        $subcategories = Subcategory::factory(5)->create();
 
         // Act: Make a GET request to the endpoint
         $response = $this->json('GET', route('page.get-filtered-products'));
 
-        // Assert: Check the response
-        $response->assertStatus(200)
-            ->assertJsonStructure([
+        // Assert status 200
+        $response->assertStatus(200);
+
+        // Assert structure of JSON response
+        $response->assertJsonStructure([
+            'categories' => [
+                '*' => [
+                    'id',
+                    'name',
+                    'slug'
+                ]
+            ],
+            'sub_categories' => [
+                '*' => [
+                    'id',
+                    'name',
+                    'slug'
+                ]
+            ],
+            'filtered_products' => [
                 'data' => [
                     '*' => [
                         'id',
@@ -127,29 +146,18 @@ class PageControllerTest extends TestCase
                         ]
                     ]
                 ],
-                'links' => [
-                    'first',
-                    'last',
-                    'prev',
-                    'next'
-                ],
-                'meta' => [
-                    'current_page',
-                    'from',
-                    'last_page',
-                    'links' => [
-                        '*' => [
-                            'url',
-                            'label',
-                            'active'
-                        ]
-                    ],
-                    'path',
+                'pagination' => [
+                    'total',
                     'per_page',
+                    'current_page',
+                    'last_page',
+                    'from',
                     'to',
-                    'total'
+                    'prev_page_url',
+                    'next_page_url'
                 ]
-            ]);
+            ]
+        ]);
     }
 
     public function test_product_details_page_it_return_product_by_slug()

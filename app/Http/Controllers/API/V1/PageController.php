@@ -4,12 +4,14 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryListResource;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductResource;
-use App\Http\Resources\ProductResourceCollection;
 use App\Http\Resources\ProductShowResource;
+use App\Http\Resources\SubCategoryListResource;
 use App\Http\Resources\VariantProductResource;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
 use App\Models\Variant;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -30,26 +32,43 @@ class PageController extends Controller
         return response()->json([
             'featured_products' => ProductResource::collection($featured_products),
             'new_products' => ProductResource::collection($new_products),
-            'categories' => CategoryListResource::collection($categories)
+            'categories' => CategoryResource::collection($categories)
         ]);
     }
 
     public function getFilteredProducts(Request $request)
     {
         try {
-            // Todo ==> Filtering products
-            $products = Product::paginate(6)->withQueryString();
+            // get all categories
+            $categories = Category::all();
+            $subcategories = Subcategory::select(['id', 'name', 'slug'])->get();
 
-            return new ProductResourceCollection($products);
+            // Todo ==> Filtering products
+            $products = Product::paginate(12)->withQueryString();
+
+            return response()->json([
+                'categories' => CategoryListResource::collection($categories),
+                'sub_categories' => SubCategoryListResource::collection($subcategories),
+                'filtered_products' => [
+                    'data' => ProductResource::collection($products),
+                    'pagination' => [
+                        'total' => $products->total(),
+                        'per_page' => $products->perPage(),
+                        'current_page' => $products->currentPage(),
+                        'last_page' => $products->lastPage(),
+                        'from' => $products->firstItem(),
+                        'to' => $products->lastItem(),
+                        "prev_page_url" => $products->previousPageUrl(),
+                        "next_page_url" => $products->nextPageUrl(),
+                    ],
+                ],
+
+            ], 200);
         } catch (\Exception $exception) {
             return $this->error($exception->getMessage(), 500, 'Something went wrong');
         }
     }
-
-    public function searchProducts(Request $request)
-    {
-
-    }
+    
 
     public function productDetails(Product $product)
     {
