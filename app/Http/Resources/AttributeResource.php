@@ -18,8 +18,8 @@ class AttributeResource extends JsonResource
             "id" => $this->id,
             "attribute_name" => $this->attribute_name,
             "values" => $this->whenLoaded('attributeValues', function () {
-                return $this->attributeValues;
-            })
+                return $this->attributeValues()->pluck('attribute_value');
+            }),
         ];
     }
 }

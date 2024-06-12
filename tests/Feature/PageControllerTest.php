@@ -211,11 +211,6 @@ class PageControllerTest extends TestCase
                         'id',
                         'attribute_name',
                         'values' => [
-                            '*' => [
-                                'id',
-                                'attribute_id',
-                                'attribute_value',
-                            ],
                         ],
                     ],
                 ],

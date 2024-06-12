@@ -55,7 +55,7 @@ class PageController extends Controller
     {
         // Eager load attributes and variants along with the product
         // get the product attributes
-        $product = $product->load(['attributes.attributeValues']);
+        $product = $product->load(['attributes.attributeValues.variants']);
 
         $productVariants = Variant::where('product_id', $product->id)->with('attributeValues.attribute')->get();
 
