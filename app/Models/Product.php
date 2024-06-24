@@ -68,23 +68,49 @@ class Product extends Model
     // Filter Product
     public function scopeFilter($query, array $filters): void
     {
-        // search by name
-        $query->when($filters['search'] ?? false, function ($query, $search) {
-            $query->whereHas('personal_info', function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
+        // filter by category slug
+        $query->when($filters['category'] ?? false, function (Builder $query, $category) {
+            $query->whereHas('category.parent', function (Builder $query) use ($category) {
+                $query->where('slug', $category);
             });
         });
 
-        // search by department
-        $query->when($filters['depart'] ?? false, function ($query, $department) {
-            $query->where('department_id', $department);
+        // filter by subcategory
+        $query->when($filters['sub_category'] ?? false, function (Builder $query, $sub_category) {
+            $query->whereHas('category', function (Builder $query) use ($sub_category) {
+                $query->where('slug', $sub_category);
+            });
         });
 
-        // search by gender
-        $query->when($filters['gender'] ?? false, function ($query, $gender) {
-            $query->whereHas('personal_info', function ($query) use ($gender) {
-                $query->where('gender', $gender);
-            });
+        // filter by min price
+        $query->when($filters['min'] ?? false, function (Builder $query, $min) {
+            $query->where('regular_price', '>=', $min);
+        });
+
+
+        // filter by max price
+        $query->when($filters['max'] ?? false, function (Builder $query, $max) {
+            $query->where('regular_price', '<=', $max);
+        });
+
+        // sorting
+        $query->when($filters['sort'] ?? false, function (Builder $query, $sort) {
+            switch ($sort) {
+                case "asc price":
+                    $query->orderBy('regular_price', 'asc');
+                    break;
+
+                case "desc price":
+                    $query->orderBy('regular_price', 'desc');
+                    break;
+                case "asc lastupdated":
+
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case "desc lastupdated":
+                    $query->orderBy('created_at', 'desc');
+                    break;
+            }
         });
     }
 

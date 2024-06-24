@@ -44,7 +44,9 @@ class PageController extends Controller
             $subcategories = Subcategory::select(['id', 'name', 'slug'])->get();
 
             // Todo ==> Filtering products
-            $products = Product::paginate(12)->withQueryString();
+            $products = Product::filter(request([
+                'category', 'sub_category', 'min', 'max', 'sort'
+            ]))->paginate(12)->withQueryString();
 
             return response()->json([
                 'categories' => CategoryListResource::collection($categories),
@@ -68,7 +70,7 @@ class PageController extends Controller
             return $this->error($exception->getMessage(), 500, 'Something went wrong');
         }
     }
-    
+
 
     public function productDetails(Product $product)
     {
