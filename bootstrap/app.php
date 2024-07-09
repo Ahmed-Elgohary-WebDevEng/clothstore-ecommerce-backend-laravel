@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -47,6 +48,16 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'message' => "Something went wrong."
                 ], 500);
+            }
+        });
+
+
+        $exceptions->render(function (InvalidSignatureException $e, Request $request) {
+            if ($request->wantsJson()) {
+
+                return response()->json([
+                    'message' => "Invalid signature exception happened."
+                ], 403);
             }
         });
     })->create();
