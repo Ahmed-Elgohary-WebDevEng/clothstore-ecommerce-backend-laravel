@@ -23,11 +23,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+
         ]);
 
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
+
 
         // for sanctum configuration
         $middleware->statefulApi();
@@ -60,4 +62,15 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 403);
             }
         });
+
+        // HTTP Exception
+//        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, Request $request) {
+//
+//            if ($request->wantsJson()) {
+//
+//                return response()->json([
+//                    'message' => $e->getMessage()
+//                ], 401);
+//            }
+//        });
     })->create();
