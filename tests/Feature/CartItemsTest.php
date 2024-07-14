@@ -236,12 +236,7 @@ class CartItemsTest extends TestCase
 
         // check the returned json
         $response
-            ->assertStatus(404)
-            ->assertJson([
-                'status' => 'Request was successful',
-                'message' => 'Product item deleted successfully',
-                'data' => null,
-            ]);
+            ->assertStatus(204);
 
         // 6- check if it is deleted from database
         $this->assertDatabaseMissing('cart_items', [
