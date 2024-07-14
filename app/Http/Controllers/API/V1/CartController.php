@@ -84,7 +84,7 @@ class CartController extends Controller
     public function destroy(CartItem $item)
     {
         $item->delete();
-        return $this->success(null, "Product item deleted successfully", 404);
+        return $this->success(null, "Product item deleted successfully", 204);
     }
 
     public function clear()
